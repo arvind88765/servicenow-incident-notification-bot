@@ -1,0 +1,40 @@
+// Build the message content regardless of priority
+var message = "🛠️ Incident Updated! 🛠️\n";
+message += "------------------------------\n";
+message += "🆔 Incident Number: " + current.number + "\n";
+message += "⚠️ Priority: " + current.priority + "\n";
+message += "📅 Updated on: " + new GlideDateTime() + "\n";  // Timestamp of the update
+message += "📝 Description: " + current.short_description + "\n";
+message += "👤 Assigned to: " + (current.assigned_to ? current.assigned_to.name : "Unassigned") + "\n";
+message += "🔄 Current State: " + current.state.getDisplayValue() + "\n";
+message += "------------------------------\n";
+message += "🔔 Please check the incident and take action if needed.";
+
+// Create Telegram bot API URL
+var telegramUrl = "https://api.telegram.org/bot7628747331:AAGR3LBP7utCaomy7s30vCrTvGjjuYuhYTY/sendMessage";
+
+// Create a RESTMessageV2 object to send the request
+var response = new sn_ws.RESTMessageV2();
+response.setHttpMethod("get");
+response.setEndpoint(telegramUrl);
+response.setQueryParameter("chat_id", "5486736690");  // Your chat ID
+response.setQueryParameter("text", message);
+
+try {
+    // Send the request and check the response
+    var res = response.execute();
+    
+    // Log the response from Telegram API (successful or error)
+    gs.info("Telegram response: " + res.getBody());  // Log the response body for debugging
+    
+    // Optionally, log the HTTP status code for more detail
+    gs.info("HTTP Status Code: " + res.getStatusCode());
+    
+    // If you want to handle errors, you can add additional checks here
+    if (res.getStatusCode() != 200) {
+        gs.error("Error sending Telegram message. Response: " + res.getBody());
+    }
+} catch (e) {
+    // Catch and log any exceptions
+    gs.error("Exception in sending Telegram message: " + e.message);
+}
