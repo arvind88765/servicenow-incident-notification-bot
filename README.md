@@ -1,6 +1,6 @@
 # 🚨 ServiceNow Incident Notification Bot 🚨
 
-Hey there! 👋 Welcome to the **ServiceNow Incident Notification Bot** project. This is a cool little tool that sends instant Telegram notifications whenever something important happens with your ServiceNow incidents — whether it's a new incident, an update, or even an SLA breach. ⏰
+Hey there! 👋 Welcome to the **ServiceNow Incident Notification Bot** project. This is a cool little tool that sends instant Telegram notifications whenever something important happens with your ServiceNow incidents — whether it's a new incident, an update .
 
 
 ## 🧐 What's This About?
