@@ -1,114 +1,100 @@
-# ServiceNow Incident Notification Bot
+# 🚨 ServiceNow Incident Notification Bot 🚨
 
-This project involves creating a **Telegram bot** that sends notifications when incidents are created, updated, or when an SLA is about to breach. The notifications are sent via ServiceNow's **Business Rules** and **REST Messages**.
+Hey there! 👋 Welcome to the **ServiceNow Incident Notification Bot** project. This is a cool little tool that sends instant Telegram notifications whenever something important happens with your ServiceNow incidents — whether it's a new incident, an update, or even an SLA breach. ⏰
 
-## Table of Contents
 
-- [Overview](#overview)
-- [Prerequisites](#prerequisites)
-- [Steps to Configure the Incident Notification Bot](#steps-to-configure-the-incident-notification-bot)
-  - [1. Create a Business Rule in ServiceNow](#1-create-a-business-rule-in-servicenow)
-  - [2. Create Your Telegram Bot](#2-create-your-telegram-bot)
-  - [3. Set Up the REST Message for Telegram](#3-set-up-the-rest-message-for-telegram)
-  - [4. Create a REST Message Step](#4-create-a-rest-message-step)
-  - [5. Save the Business Rule and Test](#5-save-the-business-rule-and-test)
-- [Conclusion](#conclusion)
-- [Additional Notes](#additional-notes)
+## 🧐 What's This About?
 
-## Overview
+This is a simple way to keep track of critical incidents in ServiceNow and get notified instantly via **Telegram**. Imagine you're managing incidents, and you don't want to miss any important updates. Well, this bot will keep you updated right in your Telegram inbox. Whether it's the creation of a new incident, updates you'll get the message! 🚀
 
-This repository demonstrates how to send Telegram notifications using ServiceNow's **Business Rules** and **REST Message** capabilities. The notifications are sent based on incident creation, update events, and SLA breaches.
+## 🔧 Prerequisites 
 
-## Prerequisites
+Before you dive into the setup, here’s what you’ll need:
 
-- **ServiceNow instance**: Ensure you have access to ServiceNow and have appropriate permissions to create Business Rules and REST Messages.
-- **Telegram bot**: You need to create a Telegram bot and get your `chat_id` to send notifications.
+1. **A ServiceNow account**: You need access to your ServiceNow instance.( am using PDI )
+2. **Permissions**: Ensure you have the necessary permissions to create Business Rules and REST messages.
+3. **Telegram Bot**: Create a Telegram bot for notifications (don’t worry, we’ll guide you through it 👇).
+4. **Chat ID**: You'll need your **Telegram chat ID** to send the message to the correct chat (we’ll show you how to get it!).
 
-## Steps to Configure the Incident Notification Bot
+## 🤖 How to Set Up the Bot?
 
-### 1. Create a Business Rule in ServiceNow
+Alright, let's get started! Here are the steps to make this bot work:
 
-To send notifications to Telegram when an incident is created or updated, you need to set up a **Business Rule**.
+### 1. Create a Business Rule 🛠️
 
-- **Navigate to**: **System Definitions** > **Business Rules** > **New**.
-- **Table Name**: Select **Incident** (or any other table depending on your project).
-- **When**: Set it to **After Insert**.
-- **Condition**: Add a condition to check for critical incidents (e.g., `priority = 1`).
-  - Example: `priority=1^EQ`
-- **Action**: Choose **Send a message to a Telegram bot when a critical incident is created**.
+To trigger the notification when an incident is created or updated, we’ll use **Business Rules**.
 
-Alternatively, you can go to the **Advanced** tab and paste the script that sends the notification to Telegram.
+- **Go to**: **System Definitions** > **Business Rules** > **New**.
+- **Table Name**: Select **Incident** (this is for incident notifications; feel free to choose another table if you're working on something else).
+- **When**: Set this to **After Insert** (so it triggers after an incident is created AND when incident is updated).
+- **Condition**: Set to blank 
+- **Action**: Choose **Send a message to a Telegram bot** when a critical incident is created.
 
-> **Note**: We will not include the code here directly; it will be in a separate file that you can download.
+You can also go to the **Advanced** tab and paste a script to handle sending messages to Telegram. Don’t worry, we’ll provide the script in the next steps.
 
-### 2. Create Your Telegram Bot
+> **Pro Tip**: This is where you set up the logic for your notifications. You can even get fancy and notify different chat IDs based on priority. 💬
 
-To create a Telegram bot:
+### 2. Create Your Telegram Bot 🤖
 
-1. Go to **BotFather** in Telegram.
-2. Use the command `/newbot` to create a new bot.
-3. After creating the bot, you will receive a **Bot Token** that will be used in your ServiceNow script.
-4. To get your **chat ID**, use **@WhatChatIDBot** in Telegram. Send any message, and use the `/getid` command to retrieve your chat ID.
+Now for the fun part — creating your Telegram bot!
 
-### 3. Set Up the REST Message for Telegram
+1. Open **Telegram** and find **@BotFather** (this is the official bot for creating other bots).
+2. Type `/newbot` to create a new bot.
+3. Follow the prompts. After you’re done, **BotFather** will give you a **Bot Token**.
+4. To get your **chat ID**, use **@WhatChatIDBot**. Start a chat with it and type `/getid` to find your **chat ID** (this is where the bot will send messages).
 
-- **Navigate to**: **System Web Services** > **REST Message**.
+### 3. Set Up REST Message for Telegram 📨
+
+Now that we’ve got the bot and chat ID, we’ll set up a **REST Message** to send messages.
+
+- **Go to**: **System Web Services** > **REST Message**.
 - **Create a New REST Message** with the following details:
-  - **Name**: Telegram Bot Message
-  - **Namespace**: Leave it as default unless you're using custom namespaces.
+  - **Name**: `Telegram Bot Message`
+  - **Namespace**: Leave as default.
   - **Endpoint**: `https://api.telegram.org/bot<Your-Bot-Token>/sendMessage`
-    - Replace `<Your-Bot-Token>` with your actual bot token.
-- Use this URL when configuring the REST Message or HTTP request to send messages to the Telegram bot.
+    - Replace `<Your-Bot-Token>` with the actual bot token you got from **BotFather**.
+     - Example : https://api.telegram.org/bot7g25847331:AAGR3LBP7PtCaomy7s30vCrTvGjpO8uhYTY/sendMessage
 
-### 4. Create a REST Message Step
+Now you’ve got the basic setup for the Telegram bot communication.
 
-1. Under the **REST Message Steps** section, click **New** to create a step.
-2. Configure the step as follows:
-  - **Step Name**: Send Message to Telegram
-  - **HTTP Method**: **POST** (because you're sending data to Telegram).
-  - **Request Body**: This is where you will send the JSON payload containing the message you want to send to Telegram.
+### 4. Create a REST Message Step 📝
 
-    Example Request Body (JSON format):
+Next, we need to set up a step for the **REST Message**. Here’s how:
 
-    ```json
-    {
-      "chat_id": "<Your-Chat-ID>",
-      "text": "New Critical Incident Created!\nIncident Number: INC0012345\nDescription: Server Down - Major Impact\nOpened at: 2025-01-12 10:00:00"
-    }
-    ```
+1. Under **REST Message Steps**, click **New**.
+2. Configure the step:
+  - **Step Name**: `Send Message to Telegram`
+  - **HTTP Method**: Select **POST** (since you’re sending data).
+  - **End Point**: Example : https://api.telegram.org/bot7625797331:AAGR3LBP7PtCaomy7s39vCrTvGjjOYuhlTY/sendMessage
+ 
 
-    Explanation of fields:
-    - `"chat_id"`: The unique identifier for your chat (e.g., `5486736990`).
-    - `"text"`: The message text. You can include dynamic variables from the ServiceNow incident record (e.g., Incident Number, Short Description).
+### 5. Save and Test 🎉
 
-### 5. Save the Business Rule and Test
+Once you've got everything set up, it's time to **Save** your business rule. 
 
-Once you've completed all the above steps:
-
-- **Save the Business Rule** in ServiceNow.
-- **Test** by creating or updating an incident to verify that notifications are successfully sent to your Telegram bot.
+Then, **test it**! Create or update an incident and check if the notification is sent to your Telegram bot.
 
 ---
 
-## Conclusion
+## ✨ Conclusion
 
-By following these steps, you can successfully set up the **ServiceNow Incident Notification Bot** to send alerts to a Telegram bot whenever incidents are created, updated, or when SLA breaches are imminent.
+And that’s it! 🎉 You’ve now set up an awesome Telegram bot that will keep you updated on all the critical incidents in ServiceNow. Whether an incident is created, updated you’ll know immediately. 🕵️‍♂️
 
 ---
 
-## Additional Notes
+## 💡 Extra Tips
 
-- Replace all placeholders such as `<Your-Bot-Token>` and `<Your-Chat-ID>` with your actual values.
-- You can customize the message format by including more details such as the incident's state, assignee, or impact.
-- Make sure that your ServiceNow instance has the required permissions to execute REST messages.
+- If you want to send different messages for different types of incidents (e.g., critical vs. low priority), you can adjust the **Business Rule** condition.
+- You can customize the message format — include the assignee, impact, or even a link to the incident.
+- If you have a group chat, just use the **group chat ID** to send the notifications there.
 
 ---
 
 ### Code Files
 
-- You can download the script file and REST message configurations from the **[GitHub Repository](#)** to integrate the solution in your ServiceNow instance.
+- You can **download** the script files and REST message configuration from this repository. They’re ready for you to plug into your ServiceNow instance.
 
 ---
 
-Feel free to modify this README as needed, and add the download links for any files you wish to share.
+Enjoy! 🚀 Let me know if you need help with any part of the process. 😄
 
