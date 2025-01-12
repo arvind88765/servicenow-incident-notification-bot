@@ -98,3 +98,8 @@ And that’s it! 🎉 You’ve now set up an awesome Telegram bot that will keep
 
 Enjoy! 🚀 Let me know if you need help with any part of the process. 😄
 
+
+
+## ⚠️ IMPORTANT:
+- Remember: The chat_id and bot token in the instructions above are just example values. You need to use your own chat ID and bot token to make this work.
+
