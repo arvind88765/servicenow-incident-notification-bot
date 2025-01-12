@@ -6,18 +6,22 @@ message += "⚠️ Priority: " + current.priority + "\n";
 message += "📅 Updated on: " + new GlideDateTime() + "\n";  // Timestamp of the update
 message += "📝 Description: " + current.short_description + "\n";
 message += "👤 Assigned to: " + (current.assigned_to ? current.assigned_to.name : "Unassigned") + "\n";
+message += "👥 Caller: " + (current.caller_id ? current.caller_id.name : "Unknown") + "\n";  // Caller name
+message += "🏷️ Category: " + (current.category ? current.category.getDisplayValue() : "Not specified") + "\n";
+message += "💥 Impact: " + (current.impact ? current.impact.getDisplayValue() : "Not specified") + "\n";
+message += "🚨 Urgency: " + (current.urgency ? current.urgency.getDisplayValue() : "Not specified") + "\n";
 message += "🔄 Current State: " + current.state.getDisplayValue() + "\n";
 message += "------------------------------\n";
 message += "🔔 Please check the incident and take action if needed.";
 
 // Create Telegram bot API URL
-var telegramUrl = "https://api.telegram.org/bot7628747331:AAGR3LBP7utCaomy7s30vCrTvGjjuYuhYTY/sendMessage";
+var telegramUrl = "https://api.telegram.org/bot7625747331:AAGR3L7890tCaomy7s30vCrTvGjjOYuhYTY/sendMessage";
 
 // Create a RESTMessageV2 object to send the request
 var response = new sn_ws.RESTMessageV2();
 response.setHttpMethod("get");
 response.setEndpoint(telegramUrl);
-response.setQueryParameter("chat_id", "5486736690");  // Your chat ID
+response.setQueryParameter("chat_id", "5486737590");  // Your chat ID
 response.setQueryParameter("text", message);
 
 try {
